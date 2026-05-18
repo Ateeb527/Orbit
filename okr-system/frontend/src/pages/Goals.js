@@ -79,15 +79,14 @@ export default function Goals() {
     load();
   };
 
+  // ── Derived values — declared BEFORE return ──────────────────────
   const safeGoals = Array.isArray(goals) ? goals : [];
-
-
-const filteredGoals = safeGoals.filter(
-  g => g.status !== 'rejected'
-)
-const totalW = filteredGoals.reduce((acc, g) => {
-  return acc + Number(g.weightage || 0);
-}, 0);
+  const filteredGoals = safeGoals.filter(g => g.status !== 'rejected');
+  const totalW = filteredGoals.reduce((acc, g) => acc + Number(g.weightage || 0), 0);
+  const weightColor =
+    totalW === 100 ? 'var(--success)' :
+    totalW > 100   ? 'var(--danger)'  :
+                     'var(--accent)';
 
   return (
     <div className="main">
@@ -115,7 +114,7 @@ const totalW = filteredGoals.reduce((acc, g) => {
               Total Weightage — {quarter}
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-              <span style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-1px', color: '#10b981' }}>{totalW}%</span>
+              <span style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-1px', color: weightColor }}>{totalW}%</span>
               <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>/ 100%</span>
             </div>
           </div>
@@ -124,18 +123,14 @@ const totalW = filteredGoals.reduce((acc, g) => {
               <div style={{
                 width: `${Math.min(totalW, 100)}%`,
                 height: '100%',
-                background: '#10b981',
+                background: weightColor,
                 borderRadius: 999,
                 transition: 'width 0.4s var(--ease-out)',
               }} />
             </div>
           </div>
-          {totalW === 100 && (
-            <span className="badge badge-approved" style={{ fontSize: 12 }}>Perfect allocation</span>
-          )}
-          {totalW > 100 && (
-            <span className="badge badge-rejected" style={{ fontSize: 12 }}>Exceeds 100%</span>
-          )}
+          {totalW === 100 && <span className="badge badge-approved" style={{ fontSize: 12 }}>Perfect allocation</span>}
+          {totalW > 100  && <span className="badge badge-rejected" style={{ fontSize: 12 }}>Exceeds 100%</span>}
         </div>
       </div>
 
@@ -153,7 +148,7 @@ const totalW = filteredGoals.reduce((acc, g) => {
               </tr>
             </thead>
             <tbody>
-              {goals.length === 0 && (
+              {safeGoals.length === 0 && (
                 <tr>
                   <td colSpan={5}>
                     <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--text-tertiary)' }}>
@@ -164,7 +159,7 @@ const totalW = filteredGoals.reduce((acc, g) => {
                   </td>
                 </tr>
               )}
-              {goals.map(g => (
+              {safeGoals.map(g => (
                 <tr key={g.id}>
                   <td style={{ maxWidth: 300 }}>
                     <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{g.title}</div>
