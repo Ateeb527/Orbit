@@ -179,9 +179,10 @@ export default function EmployeeDashboard() {
   useEffect(() => { axios.get('/api/users/stats').then(r => setStats(r.data)); }, []);
   if (!stats) return <div style={S.main}><div style={{ color: '#64748b', fontSize: '14px' }}>Loading...</div></div>;
 
-  const goalData = stats.myGoals.map(g => ({ name: g.status, value: parseInt(g.count), color: STATUS_COLORS[g.status] || '#94a3b8' })).filter(g => g.value > 0);
+  const goalData = (stats?.myGoals || []).map(g => ({ name: g.status, value: parseInt(g.count), color: STATUS_COLORS[g.status] || '#94a3b8' })).filter(g => g.value > 0);
   const total = goalData.reduce((a, b) => a + b.value, 0);
-  const getCount = s => parseInt(stats.myGoals.find(g => g.status === s)?.count || 0);
+ const getCount = s =>
+  parseInt((stats?.myGoals || []).find(g => g.status === s)?.count || 0);
   const completion = total > 0 ? Math.round((getCount('approved') / total) * 100) : 0;
 
   const alerts = [

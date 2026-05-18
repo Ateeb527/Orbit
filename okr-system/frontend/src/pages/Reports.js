@@ -51,7 +51,7 @@ export default function Reports() {
             <tr><th>Employee</th><th>Goal</th><th>Weight</th><th>Quarter</th><th>Status</th></tr>
           </thead>
           <tbody>
-            {goals.map(g => (
+            {goals?.map(g => (
               <tr key={g.id}>
                 <td>{g.employee_name}</td>
                 <td>{g.title}</td>

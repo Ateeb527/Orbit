@@ -135,7 +135,7 @@ export default function QuarterlyReviews() {
                 </tr>
               </thead>
               <tbody>
-                {goals.map(g => {
+                {goals?.map(g => {
                   const progress = Math.min(g.weightage * 2, 100);
                   const progressColor = progress >= 70 ? 'var(--success)' : progress >= 40 ? 'var(--warning)' : 'var(--danger)';
                   return (

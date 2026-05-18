@@ -132,7 +132,7 @@ export default function Checkins() {
         </div>
       )}
 
-      {goals.map((g, i) => {
+      {goals?.map((g, i) => {
         const history = checkins[g.id] || [];
         const latest = history[0];
         const latestPct = latest?.achievement_percent ?? 0;
