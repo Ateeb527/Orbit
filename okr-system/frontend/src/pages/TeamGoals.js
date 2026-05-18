@@ -50,21 +50,21 @@ axios.get('/api/users').then(r => {
     }
   };
 
- const counts = (goals || []).reduce((acc, g) => {
+const safeGoals = Array.isArray(goals) ? goals : [];
+
+const counts = safeGoals.reduce((acc, g) => {
   acc[g.status] = (acc[g.status] || 0) + 1;
   return acc;
 }, {});
 
- const filtered =
+const filtered =
   filter === 'all'
- ? (Array.isArray(goals) ? goals : [])
- : (Array.isArray(goals) ? goals : []).filter(
-  g => g.status === filter
-);
+    ? safeGoals
+    : safeGoals.filter(g => g.status === filter);
 
 
   const filterOptions = [
-    { value: 'all', label: 'All', count: goals.length },
+ { value: 'all', label: 'All', count: safeGoals.length },
     { value: 'pending', label: 'Pending', count: counts.pending || 0 },
     { value: 'approved', label: 'Approved', count: counts.approved || 0 },
     { value: 'rejected', label: 'Rejected', count: counts.rejected || 0 },
@@ -158,7 +158,7 @@ axios.get('/api/users').then(r => {
                     </td>
                   </tr>
                 )}
-                {filtered.map(g => (
+            {safeGoals.length > 0 && filtered.map(g => (
                   <tr key={g.id}>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
