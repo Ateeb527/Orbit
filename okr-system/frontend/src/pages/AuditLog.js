@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../api';
 
 const getActionMeta = (action) => {
   if (action.includes('APPROVED')) return { badgeClass: 'badge-approved', dot: 'var(--success)', label: 'Approved' };

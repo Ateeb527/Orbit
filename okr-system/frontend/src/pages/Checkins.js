@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import axios from '../api';
 function CheckinModal({ goal, onClose, onSaved }) {
   const [form, setForm] = useState({ achievement_percent: 0, notes: '', status: 'On Track' });
   const [error, setError] = useState('');
