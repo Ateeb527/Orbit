@@ -20,7 +20,13 @@ function GoalModal({ goal, onClose, onSaved }) {
       setError(err.response?.data?.error || 'Failed to save');
     }
   };
-
+ const safeGoals = Array.isArray(goals) ? goals : [];
+  const filteredGoals = safeGoals.filter(g => g.status !== 'rejected');
+  const totalW = filteredGoals.reduce((acc, g) => acc + Number(g.weightage || 0), 0);
+  const weightColor =
+    totalW === 100 ? 'var(--success)' :
+    totalW > 100   ? 'var(--danger)'  :
+                     'var(--accent)';
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
@@ -80,13 +86,7 @@ export default function Goals() {
   };
 
   // ── Derived values — declared BEFORE return ──────────────────────
-  const safeGoals = Array.isArray(goals) ? goals : [];
-  const filteredGoals = safeGoals.filter(g => g.status !== 'rejected');
-  const totalW = filteredGoals.reduce((acc, g) => acc + Number(g.weightage || 0), 0);
-  const weightColor =
-    totalW === 100 ? 'var(--success)' :
-    totalW > 100   ? 'var(--danger)'  :
-                     'var(--accent)';
+ 
 
   return (
     <div className="main">
