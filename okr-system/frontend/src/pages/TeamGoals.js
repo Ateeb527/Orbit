@@ -18,7 +18,7 @@ export default function TeamGoals() {
   const load = () => {
     setLoading(true);
     axios.get('/api/goals/team').then(r => setGoals(r.data)).finally(() => setLoading(false));
-    axios.get('/api/users').then(r => setEmployees(r.data.filter(u => u.role === 'employee')));
+    axios.get('/api/users').then(r => setEmployees((r.data || []).filter(u => u.role === 'employee'));
   };
 
   useEffect(() => { load(); }, []);
@@ -43,8 +43,16 @@ export default function TeamGoals() {
     }
   };
 
-  const counts = goals.reduce((acc, g) => { acc[g.status] = (acc[g.status] || 0) + 1; return acc; }, {});
-  const filtered = filter === 'all' ? goals : goals.filter(g => g.status === filter);
+ const counts = (goals || []).reduce((acc, g) => {
+  acc[g.status] = (acc[g.status] || 0) + 1;
+  return acc;
+}, {});
+
+ const filtered =
+  filter === 'all'
+    ? (goals || [])
+    : (goals || []).filter(g => g.status === filter);
+
 
   const filterOptions = [
     { value: 'all', label: 'All', count: goals.length },

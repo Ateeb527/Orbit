@@ -91,7 +91,8 @@ export default function QuarterlyReviews() {
   const load = async () => {
     try {
       const { data } = await axios.get('/api/goals/team');
-      setGoals(data.filter(g => g.status === 'approved'));
+setGoals((data || []).filter(g => g.status === 'approved'));
+
     } catch (err) {
       console.error(err);
     } finally {

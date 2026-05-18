@@ -20,9 +20,10 @@ export default function Reports() {
     a.href = url; a.download = 'okr_report.csv'; a.click();
   };
 
-  const byStatus = goals.reduce((acc, g) => {
-    acc[g.status] = (acc[g.status] || 0) + 1; return acc;
-  }, {});
+  const byStatus = (goals || []).reduce((acc, g) => {
+  acc[g.status] = (acc[g.status] || 0) + 1;
+  return acc;
+}, {});
 
   return (
     <div className="main">

@@ -79,7 +79,9 @@ export default function Goals() {
     load();
   };
 
-  const totalW = goals.filter(g => g.status !== 'rejected').reduce((a, b) => a + b.weightage, 0);
+  const totalW = (goals || [])
+  .filter(g => g.status !== 'rejected')
+  .reduce((a, b) => a + b.weightage, 0);
   const weightColor = totalW === 100 ? 'var(--success)' : totalW > 100 ? 'var(--danger)' : 'var(--accent)';
 
   return (

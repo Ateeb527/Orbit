@@ -103,7 +103,7 @@ export default function Checkins() {
 
   const loadGoals = async () => {
     const { data } = await axios.get('/api/goals');
-    const approved = data.filter(g => g.status === 'approved');
+   const approved = (data || []).filter(g => g.status === 'approved');
     setGoals(approved);
     const checks = {};
     await Promise.all(approved.map(async g => {
