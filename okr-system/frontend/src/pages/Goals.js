@@ -81,12 +81,14 @@ export default function Goals() {
 
   const safeGoals = Array.isArray(goals) ? goals : [];
 
-const safeGoals = Array.isArray(goals) ? goals : [];
 
 const filteredGoals = safeGoals.filter(
   g => g.status !== 'rejected'
-) .reduce((a, b) => a + b.weightage, 0);
-  const weightColor = totalW === 100 ? 'var(--success)' : totalW > 100 ? 'var(--danger)' : 'var(--accent)';
+)
+
+const bgStatus = safeGoals.reduce((acc, g) => {
+  return acc + g.weightage;
+}, 0);
 
   return (
     <div className="main">

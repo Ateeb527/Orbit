@@ -46,8 +46,10 @@ const goalData = myGoals
   }))
   .filter(g => g.value > 0);
  const total = (Array.isArray(goalData) ? goalData : [])
-  .reduce((a, b) => a + b.value, 0);
-const getCount = s =>
+  .reduce((a, b) => a + b.value, 0);(Array.isArray(goalData) ? goalData : []).reduce(
+  (a, b) => a + b.value,
+  0
+);const getCount = s =>
   parseInt(myGoals.find(g => g.status === s)?.count || 0);
   const completion = total > 0 ? Math.round((getCount('approved') / total) * 100) : 0;
 
