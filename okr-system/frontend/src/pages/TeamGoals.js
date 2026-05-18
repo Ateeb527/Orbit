@@ -16,10 +16,13 @@ export default function TeamGoals() {
   });
 
   const load = () => {
-    setLoading(true);
-    axios.get('/api/goals/team').then(r => setGoals(r.data)).finally(() => setLoading(false));
-    axios.get('/api/users').then(r => setEmployees((r.data || []).filter(u => u.role === 'employee'));
+  setLoading(true);
+  axios.get('/api/goals/team').then(r => setGoals(r.data)).finally(() => setLoading(false));
+ axios.get('/api/users').then(r =>
+setEmployees((r.data || []).filter(u => u.role === 'employee'))
+);
   };
+
 
   useEffect(() => { load(); }, []);
 
