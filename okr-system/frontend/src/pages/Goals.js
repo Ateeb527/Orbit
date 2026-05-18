@@ -125,7 +125,7 @@ const bgStatus = safeGoals.reduce((acc, g) => {
               <div style={{
                 width: `${Math.min(totalW, 100)}%`,
                 height: '100%',
-                background: weightColor,
+                background: '#10b981',
                 borderRadius: 999,
                 transition: 'width 0.4s var(--ease-out)',
               }} />
