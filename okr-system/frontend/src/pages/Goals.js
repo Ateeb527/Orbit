@@ -85,9 +85,8 @@ export default function Goals() {
 const filteredGoals = safeGoals.filter(
   g => g.status !== 'rejected'
 )
-
-const bgStatus = safeGoals.reduce((acc, g) => {
-  return acc + g.weightage;
+const totalW = filteredGoals.reduce((acc, g) => {
+  return acc + Number(g.weightage || 0);
 }, 0);
 
   return (
