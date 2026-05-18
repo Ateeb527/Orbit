@@ -21,19 +21,34 @@ const S = {
 export default function EmployeeDashboard() {
   const { user } = useAuth();
   const [stats, setStats] = useState(null);
-  useEffect(() => { axios.get('/api/users/stats').then(r => setStats(r.data)); }, []);
+useEffect(() => {
+  axios
+    .get('/api/users/stats')
+    .then(r => {
+      console.log('STATS DATA:', r.data);
+      setStats(r.data);
+    })
+    .catch(err => {
+      console.error('STATS ERROR:', err.response?.data || err.message);
+    });
+}, []); 
   if (!stats) return <div style={S.main}><div style={{ color: '#64748b', fontSize: '14px' }}>Loading...</div></div>;
 
-  const goalData = (stats?.myGoals || [])
+  const myGoals = Array.isArray(stats?.myGoals)
+  ? stats.myGoals
+  : [];
+
+const goalData = myGoals
   .map(g => ({
     name: g.status,
-    value: parseInt(g.count),
+    value: parseInt(g.count || 0),
     color: STATUS_COLORS[g.status] || '#94a3b8'
   }))
   .filter(g => g.value > 0);
-  const total = (goalData || []).reduce((a, b) => a + b.value, 0);
- const getCount = s =>
-  parseInt((stats?.myGoals || []).find(g => g.status === s)?.count || 0);
+ const total = (Array.isArray(goalData) ? goalData : [])
+  .reduce((a, b) => a + b.value, 0);
+const getCount = s =>
+  parseInt(myGoals.find(g => g.status === s)?.count || 0);
   const completion = total > 0 ? Math.round((getCount('approved') / total) * 100) : 0;
 
   const alerts = [
@@ -64,15 +79,31 @@ export default function EmployeeDashboard() {
       <div style={S.grid2}>
         <div style={S.card}>
           <div style={S.cardTitle}>Goal Status Breakdown</div>
-          <ResponsiveContainer width="100%" height={260}>
-            <PieChart>
-              <Pie data={goalData} cx="50%" cy="50%" outerRadius={90} innerRadius={50} dataKey="value">
-                {goalData.map((e, i) => <Cell key={i} fill={e.color} />)}
-              </Pie>
-              <Tooltip contentStyle={{ border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px' }} />
-              <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '12px' }} />
-            </PieChart>
-          </ResponsiveContainer>
+         {goalData.length > 0 ? (
+  <ResponsiveContainer width="100%" height={260}>
+    <PieChart>
+      <Pie
+        data={goalData}
+        cx="50%"
+        cy="50%"
+        outerRadius={90}
+        innerRadius={50}
+        dataKey="value"
+      >
+        {goalData.map((e, i) => (
+          <Cell key={i} fill={e.color} />
+        ))}
+      </Pie>
+
+      <Tooltip />
+      <Legend />
+    </PieChart>
+  </ResponsiveContainer>
+) : (
+  <div style={{ color: '#64748b', fontSize: '14px' }}>
+    No goals found
+  </div>
+)}
         </div>
 
         <div style={S.card}>

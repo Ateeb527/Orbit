@@ -18,9 +18,13 @@ export default function TeamGoals() {
   const load = () => {
   setLoading(true);
   axios.get('/api/goals/team').then(r => setGoals(r.data)).finally(() => setLoading(false));
- axios.get('/api/users').then(r =>
-setEmployees((r.data || []).filter(u => u.role === 'employee'))
-);
+axios.get('/api/users').then(r => {
+  const safeUsers = Array.isArray(r.data) ? r.data : [];
+
+  setEmployees(
+    safeUsers.filter(u => u.role === 'employee')
+  );
+});
   };
 
 
@@ -53,8 +57,10 @@ setEmployees((r.data || []).filter(u => u.role === 'employee'))
 
  const filtered =
   filter === 'all'
-    ? (goals || [])
-    : (goals || []).filter(g => g.status === filter);
+ ? (Array.isArray(goals) ? goals : [])
+ : (Array.isArray(goals) ? goals : []).filter(
+  g => g.status === filter
+);
 
 
   const filterOptions = [

@@ -1,194 +1,4 @@
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import { useAuth } from '../../context/AuthContext';
 
-// import {
-//   ResponsiveContainer,
-//   BarChart,
-//   Bar,
-//   XAxis,
-//   YAxis,
-//   Tooltip,
-//   CartesianGrid,
-// } from 'recharts';
-
-// export default function ManagerDashboard() {
-//   const { user } = useAuth();
-
-//   const [stats, setStats] = useState(null);
-
-//   useEffect(() => {
-//     axios.get('/api/users/stats')
-//       .then(r => setStats(r.data));
-//   }, []);
-
-//   if (!stats) {
-//     return (
-//       <div className="main">
-//         Loading...
-//       </div>
-//     );
-//   }
-
-//   const pending = stats.myGoals?.find(
-//     g => g.status === 'pending'
-//   );
-
-//   return (
-//     <div className="main">
-
-//       <div className="page-title">
-//         Manager Dashboard
-//       </div>
-
-//       <div style={{
-//         marginBottom: 24,
-//         color: '#64748b',
-//       }}>
-//         Welcome back, {user.name}! 👋
-//       </div>
-
-//       {/* KPI */}
-//       <div className="stat-grid">
-
-//         <div className="stat-card">
-//           <div className="value">
-//             {stats.teamStats?.length || 0}
-//           </div>
-
-//           <div className="label">
-//             Team Members
-//           </div>
-//         </div>
-
-//         <div className="stat-card">
-//           <div
-//             className="value"
-//             style={{ color: '#d97706' }}
-//           >
-//             {pending?.count || 0}
-//           </div>
-
-//           <div className="label">
-//             Pending Approvals
-//           </div>
-//         </div>
-
-//         <div className="stat-card">
-//           <div
-//             className="value"
-//             style={{ color: '#16a34a' }}
-//           >
-//             78%
-//           </div>
-
-//           <div className="label">
-//             Team Completion
-//           </div>
-//         </div>
-
-//         <div className="stat-card">
-//           <div
-//             className="value"
-//             style={{ color: '#2563eb' }}
-//           >
-//             3
-//           </div>
-
-//           <div className="label">
-//             Pending Check-ins
-//           </div>
-//         </div>
-
-//       </div>
-
-//       {/* Main */}
-//       <div style={{
-//         display: 'grid',
-//         gridTemplateColumns: '1fr 1fr',
-//         gap: 20,
-//       }}>
-
-//         {/* Team Performance */}
-//         <div className="card">
-
-//           <h3 style={{
-//             marginBottom: 16,
-//             fontSize: 15,
-//             fontWeight: 600,
-//           }}>
-//             Team Performance
-//           </h3>
-
-//           <ResponsiveContainer width="100%" height={260}>
-
-//             <BarChart data={stats.teamStats}>
-
-//               <CartesianGrid strokeDasharray="3 3" />
-
-//               <XAxis dataKey="name" />
-
-//               <YAxis />
-
-//               <Tooltip />
-
-//               <Bar
-//                 dataKey="approved_goals"
-//                 fill="#16a34a"
-//                 radius={[4, 4, 0, 0]}
-//               />
-
-//             </BarChart>
-
-//           </ResponsiveContainer>
-//         </div>
-
-//         {/* Approval Queue */}
-//         <div className="card">
-
-//           <h3 style={{
-//             marginBottom: 16,
-//             fontSize: 15,
-//             fontWeight: 600,
-//           }}>
-//             Approval Queue
-//           </h3>
-
-//           <div style={{
-//             display: 'flex',
-//             flexDirection: 'column',
-//             gap: 12,
-//           }}>
-
-//             {pending?.count > 0 ? (
-//               <div className="alert alert-warning">
-//                 ⏳ {pending.count} goals require approval
-//               </div>
-//             ) : (
-//               <div className="alert alert-success">
-//                 ✅ No pending approvals
-//               </div>
-//             )}
-
-//             <a
-//               href="/team"
-//               className="btn btn-primary"
-//               style={{
-//                 width: 'fit-content',
-//                 textDecoration: 'none',
-//               }}
-//             >
-//               Review Team Goals →
-//             </a>
-
-//           </div>
-//         </div>
-
-//       </div>
-
-//     </div>
-//   );
-// }
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
@@ -214,8 +24,15 @@ export default function ManagerDashboard() {
   useEffect(() => { axios.get('/api/users/stats').then(r => setStats(r.data)); }, []);
   if (!stats) return <div style={S.main}><div style={{ color: '#64748b', fontSize: '14px' }}>Loading...</div></div>;
 
-  const pending = stats.myGoals?.find(g => g.status === 'pending');
+ const myGoals = Array.isArray(stats?.myGoals)
+  ? stats.myGoals
+  : [];
 
+const teamStats = Array.isArray(stats?.teamStats)
+  ? stats.teamStats
+  : [];
+
+const pending = myGoals.find(g => g.status === 'pending');
   return (
     <div style={S.main}>
       <div style={S.heading}>Manager Dashboard</div>
@@ -223,7 +40,7 @@ export default function ManagerDashboard() {
 
       <div style={S.grid4}>
         {[
-          { val: stats.teamStats?.length || 0, label: 'Team Members', color: '#0f172a' },
+         { val: teamStats.length, label: 'Team Members', color: '#0f172a' },
           { val: pending?.count || 0, label: 'Pending Approvals', color: '#f59e0b' },
           { val: '78%', label: 'Team Completion', color: '#10b981' },
           { val: 3, label: 'Pending Check-ins', color: '#6366f1' },
@@ -238,8 +55,9 @@ export default function ManagerDashboard() {
       <div style={S.grid2}>
         <div style={S.card}>
           <div style={S.cardTitle}>Team Performance</div>
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={stats.teamStats} barSize={28}>
+         {teamStats.length > 0 ? (
+  <ResponsiveContainer width="100%" height={260}>
+    <BarChart data={teamStats} barSize={28}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
               <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
@@ -247,6 +65,11 @@ export default function ManagerDashboard() {
               <Bar dataKey="approved_goals" fill="#10b981" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
+          ) : (
+  <div style={{ color: '#64748b', fontSize: '14px' }}>
+    No team data available
+  </div>
+)}
         </div>
 
         <div style={S.card}>

@@ -79,9 +79,13 @@ export default function Goals() {
     load();
   };
 
-  const totalW = (goals || [])
-  .filter(g => g.status !== 'rejected')
-  .reduce((a, b) => a + b.weightage, 0);
+  const safeGoals = Array.isArray(goals) ? goals : [];
+
+const safeGoals = Array.isArray(goals) ? goals : [];
+
+const filteredGoals = safeGoals.filter(
+  g => g.status !== 'rejected'
+) .reduce((a, b) => a + b.weightage, 0);
   const weightColor = totalW === 100 ? 'var(--success)' : totalW > 100 ? 'var(--danger)' : 'var(--accent)';
 
   return (

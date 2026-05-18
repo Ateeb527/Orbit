@@ -1,245 +1,4 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import { useAuth } from "../../context/AuthContext";
-// import {
-//   PieChart,
-//   Pie,
-//   Cell,
-//   Tooltip,
-//   ResponsiveContainer,
-//   BarChart,
-//   Bar,
-//   XAxis,
-//   YAxis,
-//   CartesianGrid,
-// } from "recharts";
 
-// export default function AdminDashboard() {
-//   const { user } = useAuth();
-
-//   const [stats, setStats] = useState(null);
-
-//   useEffect(() => {
-//     axios
-//       .get("/api/users/admin-stats")
-//       .then((r) => setStats(r.data))
-//       .catch((err) => console.error(err));
-//   }, []);
-
-//   if (!stats) {
-//     return <div className="main">Loading...</div>;
-//   }
-
-//   const submissionRate =
-//     stats.totalGoals > 0
-//       ? Math.round((stats.approvedGoals / stats.totalGoals) * 100)
-//       : 0;
-
-//   const pieData = [
-//     {
-//       name: "Approved",
-//       value: stats.approvedGoals,
-//       color: "#16a34a",
-//     },
-//     {
-//       name: "Pending",
-//       value: stats.pendingGoals,
-//       color: "#d97706",
-//     },
-//     {
-//       name: "Draft",
-//       value: stats.totalGoals - stats.approvedGoals - stats.pendingGoals,
-//       color: "#94a3b8",
-//     },
-//   ];
-
-//   const quarterlyData = [
-//     { quarter: "Q1", checkins: 4 },
-//     { quarter: "Q2", checkins: 7 },
-//     { quarter: "Q3", checkins: 5 },
-//     { quarter: "Q4", checkins: stats.totalCheckins },
-//   ];
-
-//   return (
-//     <div className="main">
-//       <div className="page-title">Executive Admin Dashboard</div>
-
-//       <div
-//         style={{
-//           marginBottom: 24,
-//           color: "#64748b",
-//           fontSize: 15,
-//         }}
-//       >
-//         Organization-wide performance analytics and governance overview.
-//       </div>
-
-//       {/* KPI CARDS */}
-//       <div className="stat-grid">
-//         <div className="stat-card">
-//           <div className="value">{stats.totalUsers}</div>
-//           <div className="label">Active Employees</div>
-//         </div>
-
-//         <div className="stat-card">
-//           <div className="value" style={{ color: "#16a34a" }}>
-//             {submissionRate}%
-//           </div>
-//           <div className="label">Goal Completion</div>
-//         </div>
-
-//         <div className="stat-card">
-//           <div className="value" style={{ color: "#d97706" }}>
-//             {stats.pendingGoals}
-//           </div>
-//           <div className="label">Pending Reviews</div>
-//         </div>
-
-//         <div className="stat-card">
-//           <div className="value" style={{ color: "#2563eb" }}>
-//             {stats.totalCheckins}
-//           </div>
-//           <div className="label">Quarterly Check-ins</div>
-//         </div>
-//       </div>
-
-//       {/* ANALYTICS */}
-//       <div
-//         style={{
-//           display: "grid",
-//           gridTemplateColumns: "1fr 1fr",
-//           gap: 20,
-//           marginBottom: 20,
-//         }}
-//       >
-//         {/* PIE CHART */}
-//         <div className="card">
-//           <div
-//             style={{
-//               marginBottom: 20,
-//               fontWeight: 700,
-//               fontSize: 18,
-//             }}
-//           >
-//             Goal Status Distribution
-//           </div>
-
-//           <div style={{ height: 280 }}>
-//             <ResponsiveContainer width="100%" height="100%">
-//               <PieChart>
-//                 <Pie
-//                   data={pieData}
-//                   dataKey="value"
-//                   nameKey="name"
-//                   outerRadius={90}
-//                   label
-//                 >
-//                   {pieData.map((entry, index) => (
-//                     <Cell key={index} fill={entry.color} />
-//                   ))}
-//                 </Pie>
-
-//                 <Tooltip />
-//               </PieChart>
-//             </ResponsiveContainer>
-//           </div>
-//         </div>
-
-//         {/* BAR CHART */}
-//         <div className="card">
-//           <div
-//             style={{
-//               marginBottom: 20,
-//               fontWeight: 700,
-//               fontSize: 18,
-//             }}
-//           >
-//             Quarterly Review Activity
-//           </div>
-
-//           <div style={{ height: 280 }}>
-//             <ResponsiveContainer width="100%" height="100%">
-//               <BarChart data={quarterlyData}>
-//                 <CartesianGrid strokeDasharray="3 3" />
-
-//                 <XAxis dataKey="quarter" />
-
-//                 <YAxis />
-
-//                 <Tooltip />
-
-//                 <Bar dataKey="checkins" fill="#2563eb" radius={[6, 6, 0, 0]} />
-//               </BarChart>
-//             </ResponsiveContainer>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* LOWER SECTION */}
-//       <div
-//         style={{
-//           display: "grid",
-//           gridTemplateColumns: "1fr 1fr",
-//           gap: 20,
-//         }}
-//       >
-//         {/* ALERTS */}
-//         <div className="card">
-//           <div
-//             style={{
-//               marginBottom: 18,
-//               fontWeight: 700,
-//               fontSize: 18,
-//             }}
-//           >
-//             Escalation Alerts
-//           </div>
-
-//           <div className="alert alert-warning">
-//             ⚠️ {stats.pendingGoals} goals pending manager approval
-//           </div>
-
-//           <div className="alert alert-info" style={{ marginTop: 12 }}>
-//             📋 {stats.totalGoals} goals created organization-wide
-//           </div>
-
-//           <div className="alert alert-success" style={{ marginTop: 12 }}>
-//             ✅ {stats.approvedGoals} goals successfully approved
-//           </div>
-//         </div>
-
-//         {/* ACTIVITY */}
-//         <div className="card">
-//           <div
-//             style={{
-//               marginBottom: 18,
-//               fontWeight: 700,
-//               fontSize: 18,
-//             }}
-//           >
-//             Recent Audit Activity
-//           </div>
-
-//           <div
-//             style={{
-//               display: "flex",
-//               flexDirection: "column",
-//               gap: 14,
-//             }}
-//           >
-//             <div>👥 {stats.totalUsers} employees currently active</div>
-
-//             <div>✅ {stats.approvedGoals} approvals completed</div>
-
-//             <div>📝 {stats.totalCheckins} quarterly reviews submitted</div>
-
-//             <div>🔔 {stats.pendingGoals} approval workflows pending</div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
@@ -266,12 +25,25 @@ export default function AdminDashboard() {
   useEffect(() => { axios.get("/api/users/admin-stats").then(r => setStats(r.data)).catch(console.error); }, []);
   if (!stats) return <div style={S.main}><div style={{ color: '#64748b', fontSize: '14px' }}>Loading...</div></div>;
 
-  const submissionRate = stats.totalGoals > 0 ? Math.round((stats.approvedGoals / stats.totalGoals) * 100) : 0;
+ const totalGoals = Number(stats?.totalGoals || 0);
+const approvedGoals = Number(stats?.approvedGoals || 0);
+const pendingGoals = Number(stats?.pendingGoals || 0);
+const totalUsers = Number(stats?.totalUsers || 0);
+const totalCheckins = Number(stats?.totalCheckins || 0);
+
+const submissionRate =
+  totalGoals > 0
+    ? Math.round((approvedGoals / totalGoals) * 100)
+    : 0;
   const pieData = [
-    { name: "Approved", value: stats.approvedGoals, color: "#10b981" },
-    { name: "Pending", value: stats.pendingGoals, color: "#f59e0b" },
-    { name: "Draft", value: stats.totalGoals - stats.approvedGoals - stats.pendingGoals, color: "#e2e8f0" },
-  ];
+  { name: "Approved", value: approvedGoals, color: "#10b981" },
+  { name: "Pending", value: pendingGoals, color: "#f59e0b" },
+  {
+    name: "Draft",
+    value: Math.max(totalGoals - approvedGoals - pendingGoals, 0),
+    color: "#e2e8f0"
+  },
+];
   const quarterlyData = [
     { quarter: "Q1", checkins: 4 }, { quarter: "Q2", checkins: 7 },
     { quarter: "Q3", checkins: 5 }, { quarter: "Q4", checkins: stats.totalCheckins },
@@ -284,10 +56,9 @@ export default function AdminDashboard() {
 
       <div style={S.grid4}>
         {[
-          { val: stats.totalUsers, label: 'Active Employees', color: '#0f172a' },
-          { val: `${submissionRate}%`, label: 'Goal Completion', color: '#10b981' },
-          { val: stats.pendingGoals, label: 'Pending Reviews', color: '#f59e0b' },
-          { val: stats.totalCheckins, label: 'Quarterly Check-ins', color: '#6366f1' },
+          { val: totalUsers, label: 'Active Employees', color: '#0f172a' },
+{ val: pendingGoals, label: 'Pending Reviews', color: '#f59e0b' },
+{ val: totalCheckins, label: 'Quarterly Check-ins', color: '#6366f1' },
         ].map(({ val, label, color }) => (
           <div key={label} style={S.kpiCard}>
             <div style={{ ...S.kpiVal, color }}>{val}</div>
@@ -303,7 +74,9 @@ export default function AdminDashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={90} innerRadius={50}>
-                  {pieData.map((e, i) => <Cell key={i} fill={e.color} />)}
+                 {pieData.map((e, i) => (
+  <Cell key={i} fill={e.color} />
+))}
                 </Pie>
                 <Tooltip contentStyle={{ border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px' }} />
               </PieChart>
