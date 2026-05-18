@@ -116,7 +116,7 @@ const bgStatus = safeGoals.reduce((acc, g) => {
               Total Weightage — {quarter}
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-              <span style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-1px', color: weightColor }}>{totalW}%</span>
+              <span style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-1px', color: '#10b981' }}>{totalW}%</span>
               <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>/ 100%</span>
             </div>
           </div>
