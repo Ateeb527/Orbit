@@ -39,8 +39,9 @@ export default function Sidebar() {
   .catch(() => setNotifications([]));
   }, []);
 
-  const links = LINKS[user?.role] || LINKS.employee;
-
+const links = Array.isArray(LINKS[user?.role])
+  ? LINKS[user?.role]
+  : LINKS.employee;
   return (
     <div style={S.sidebar}>
       {/* Logo */}
@@ -58,7 +59,7 @@ export default function Sidebar() {
       {/* Nav */}
       <nav style={S.nav}>
         <div style={S.navLabel}>Navigation</div>
-        {links.map(l => {
+       {(links || []).map(l => { 
           const active = pathname === l.path;
           return (
             <button key={l.path} onClick={() => navigate(l.path)}
