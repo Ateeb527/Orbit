@@ -12,3 +12,4 @@ Modern SaaS workspace for goal tracking, team collaboration, and performance man
 <img width="1345" height="920" alt="image" src="https://github.com/user-attachments/assets/5bfff6fc-dd15-46eb-9be3-62217ed7909f" />
 <img width="1914" height="889" alt="image" src="https://github.com/user-attachments/assets/67ee373c-d55c-4169-a6c4-eb0c4c7c7b28" />
 <img width="1557" height="881" alt="image" src="https://github.com/user-attachments/assets/4826e53c-a7b7-497b-953f-b65fbd1c20a0" />
+![](https://komarev.com/ghpvc/?username=Ateeb527)
