@@ -18,7 +18,10 @@ function ReviewModal({ goal, onClose }) {
     }
   };
 
-  const progress = Math.min(goal.weightage * 2, 100);
+  const progress = Math.min(
+  Math.max(Number(goal.progress ?? 0), 0),
+  100
+);
   const progressColor = progress >= 70 ? 'var(--success)' : progress >= 40 ? 'var(--warning)' : 'var(--danger)';
 
   return (
@@ -109,17 +112,49 @@ console.log(
   }))
 );
 
-setGoals(
-  safeGoals.filter(
-    g => String(g.status || '').trim().toLowerCase() === 'approved'
-  )
+
+const approvedGoals = safeGoals.filter(
+  g => String(g.status || '').trim().toLowerCase() === 'approved'
 );
+
+const goalsWithProgress = await Promise.all(
+  approvedGoals.map(async goal => {
+    try {
+      const { data: checkinData } = await api.get(
+        `/api/checkins/goal/${goal.id}`
+      );
+
+      const checkins = Array.isArray(checkinData)
+        ? checkinData
+        : Array.isArray(checkinData?.checkins)
+          ? checkinData.checkins
+          : [];
+
+      const latest = checkins.reduce((newest, current) => {
+        if (!newest) return current;
+
+        return new Date(current.created_at || 0) >
+          new Date(newest.created_at || 0)
+          ? current
+          : newest;
+      }, null);
+
+      return {
+        ...goal,
+        progress: Math.min(
+          Math.max(Number(latest?.achievement_percent ?? 0), 0),
+          100
+        ),
+      };
     } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+      console.error(`Check-in fetch failed for goal ${goal.id}:`, err);
+      return { ...goal, progress: 0 };
     }
-  };
+  })
+);
+
+setGoals(goalsWithProgress);
+
 
   useEffect(() => { load(); }, []);
 
