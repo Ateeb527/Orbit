@@ -152,7 +152,7 @@ const goalsWithProgress = await Promise.all(
     }
   })
 );
-
+console.log('FINAL GOALS WITH PROGRESS:', goalsWithProgress);
 setGoals(goalsWithProgress);
     } catch (err) {
       console.error('Failed to load quarterly reviews:', err);
