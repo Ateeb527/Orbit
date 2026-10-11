@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api';
 import { useAuth } from '../context/AuthContext';
-
+import GoalModal from '../components/GoalModal';
 
 const QUARTERS = ['Q1-2026', 'Q2-2026', 'Q3-2026', 'Q4-2026'];
 
@@ -344,6 +344,7 @@ export default function Goals() {
       {modal && (
         <GoalModal
           goal={modal === 'new' ? null : modal}
+            quarter={quarter}
           onClose={() => setModal(null)}
           onSaved={() => {
             setModal(null);
