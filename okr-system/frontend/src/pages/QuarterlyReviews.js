@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 function ReviewModal({ goal, onClose }) {
   const [comment, setComment] = useState('');
@@ -90,7 +90,7 @@ export default function QuarterlyReviews() {
 
   const load = async () => {
     try {
-      const { data } = await axios.get('/api/goals/team');
+      const { data } = await api.get('/api/goals/team');
 console.log('Quarterly Reviews API response:', data);
 
 const safeGoals = Array.isArray(data)
