@@ -154,6 +154,13 @@ const goalsWithProgress = await Promise.all(
 );
 
 setGoals(goalsWithProgress);
+    } catch (err) {
+      console.error('Failed to load quarterly reviews:', err);
+      setGoals([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   useEffect(() => { load(); }, []);
