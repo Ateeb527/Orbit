@@ -6,7 +6,7 @@ function ReviewModal({ goal, onClose }) {
 
   const save = async () => {
     try {
-      await axios.post('/api/checkins/review', {
+      await api.post('/api/checkins/review', {
         goal_id: goal.id,
         manager_comment: comment,
       });
