@@ -91,8 +91,29 @@ export default function QuarterlyReviews() {
   const load = async () => {
     try {
       const { data } = await axios.get('/api/goals/team');
-const safeGoals = Array.isArray(data) ? data : [];
-setGoals(safeGoals.filter(g => g.status === 'approved'));
+console.log('Quarterly Reviews API response:', data);
+
+const safeGoals = Array.isArray(data)
+  ? data
+  : Array.isArray(data?.goals)
+    ? data.goals
+    : [];
+
+console.log('Goals received:', safeGoals);
+console.log(
+  'Goal statuses:',
+  safeGoals.map(g => ({
+    id: g.id,
+    title: g.title,
+    status: g.status
+  }))
+);
+
+setGoals(
+  safeGoals.filter(
+    g => String(g.status || '').trim().toLowerCase() === 'approved'
+  )
+);
     } catch (err) {
       console.error(err);
     } finally {
