@@ -200,7 +200,8 @@ setGoals(goalsWithProgress);
               </thead>
               <tbody>
                 {goals?.map(g => {
-                  const progress = Math.min(g.weightage * 2, 100);
+                  const progress = Math.min(
+                  Math.max(Number(g.progress ?? 0), 0),100);
                   const progressColor = progress >= 70 ? 'var(--success)' : progress >= 40 ? 'var(--warning)' : 'var(--danger)';
                   return (
                     <tr key={g.id}>
